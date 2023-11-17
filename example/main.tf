@@ -683,6 +683,16 @@ resource "keycloak_oidc_google_identity_provider" "google" {
   gui_order                               = 2
 }
 
+resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis_taxis_test" {
+  realm                                   = keycloak_realm.test.id
+  client_id                               = "myclientid.gsis.taxis.test"
+  client_secret                           = "myclientsecret"
+  default_scopes                          = "openid random profile"
+  accepts_prompt_none_forward_from_client = false
+  sync_mode                               = "FORCE"
+  gui_order                               = 2
+}
+
 //This example does not work in keycloak 10, because the interfaces that our customIdp implements, have changed in the keycloak latest version.
 //We need to make decide which keycloak version we going to support and test for the customIdp
 //resource keycloak_oidc_identity_provider custom_oidc_idp {
