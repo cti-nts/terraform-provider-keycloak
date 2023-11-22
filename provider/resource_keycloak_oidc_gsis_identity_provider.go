@@ -22,6 +22,7 @@ func resourceKeycloakOidcGsisIdentityProvider() *schema.Resource {
 		"provider_id": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "provider id, is one of gsis-taxis-test, gsis-taxis, gsis-govuser-test, gsis-govuser, unless you have a extended custom implementation",
 		},
 		"client_id": {
