@@ -1,10 +1,10 @@
 ---
-page_title: "keycloak_oidc_gsis_taxis_test_identity_provider Resource"
+page_title: "keycloak_oidc_gsis_identity_provider Resource"
 ---
 
-# keycloak\_oidc\_gsis\_taxis\_test\_identity\_provider Resource
+# keycloak\_oidc\_gsis\_identity\_provider Resource
 
-Allows for creating and managing OIDC GSIS Taxis Test Identity Providers within Keycloak.
+Allows for creating and managing OIDC GSIS Identity Providers within Keycloak.
 
 OIDC (OpenID Connect) identity providers allows users to authenticate through a third party system using the OIDC standard.
 
@@ -16,7 +16,7 @@ resource "keycloak_realm" "realm" {
   enabled = true
 }
 
-resource "keycloak_oidc_gsis_taxis_test_identity_provider" "realm_identity_provider" {
+resource "keycloak_oidc_gsis_identity_provider" "realm_identity_provider" {
   realm             = keycloak_realm.realm.id
   client_id         = "clientID"
   client_secret     = "clientSecret"
@@ -26,6 +26,7 @@ resource "keycloak_oidc_gsis_taxis_test_identity_provider" "realm_identity_provi
 ## Argument Reference
 
 - `realm` - (Required) The name of the realm. This is unique across Keycloak.
+- `provider_id` - (Required) The ID of the identity provider to use. One of `gsis-taxis-test`, `gsis-taxis`, `gsis-govuser-test`, `gsis-govuser`.
 - `client_id` - (Required) The client or client identifier registered within the identity provider.
 - `client_secret` - (Required) The client or client secret registered within the identity provider. This field is able to obtain its value from vault, use $${vault.ID} format.
 - `enabled` - (Optional) When `true`, users will be able to log in to this realm using this identity provider. Defaults to `true`.
@@ -35,7 +36,6 @@ resource "keycloak_oidc_gsis_taxis_test_identity_provider" "realm_identity_provi
 - `trust_email` - (Optional) When `true`, email addresses for users in this provider will automatically be verified regardless of the realm's email verification policy. Defaults to `false`.
 - `first_broker_login_flow_alias` - (Optional) The authentication flow to use when users log in for the first time through this identity provider. Defaults to `first broker login`.
 - `post_broker_login_flow_alias` - (Optional) The authentication flow to use after users have successfully logged in, which can be used to perform additional user verification (such as OTP checking). Defaults to an empty string, which means no post login flow will be used.
-- `provider_id` - (Optional) The ID of the identity provider to use. Defaults to `gsis-taxis-test`, which should be used unless you have extended Keycloak and provided your own implementation.
 - `default_scopes` - (Optional) The scopes to be sent when asking for authorization. It can be a space-separated list of scopes. Defaults to empty scope.
 - `accepts_prompt_none_forward_from_client` - (Optional) When `true`, unauthenticated requests with `prompt=none` will be forwarded to Google instead of returning an error. Defaults to `false`.
 - `disable_user_info` - (Optional) When `true`, disables the usage of the user info service to obtain additional user information. Defaults to `false`.
@@ -55,5 +55,5 @@ Identity providers can be imported using the format `{{realm_id}}/{{idp_alias}}`
 Example:
 
 ```bash
-$ terraform import keycloak_oidc_gsis_taxis_test_identity_provider.realm_identity_provider my-realm/my-idp
+$ terraform import keycloak_oidc_gsis_identity_provider.realm_identity_provider my-realm/my-idp
 ```

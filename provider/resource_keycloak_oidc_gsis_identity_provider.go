@@ -7,23 +7,22 @@ import (
 	"github.com/mrparkers/terraform-provider-keycloak/keycloak/types"
 )
 
-func resourceKeycloakOidcGsisTaxisTestIdentityProvider() *schema.Resource {
-	oidcGsisTaxisTestSchema := map[string]*schema.Schema{
+func resourceKeycloakOidcGsisIdentityProvider() *schema.Resource {
+	oidcGsisSchema := map[string]*schema.Schema{
 		"alias": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "The alias uniquely identifies an identity provider and it is also used to build the redirect uri. In case of GsisTaxisTest this is computed and always GsisTaxisTest",
+			Description: "The alias uniquely identifies an identity provider and it is also used to build the redirect uri. In case of Gsis this is computed and always Gsis",
 		},
 		"display_name": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Not used by this provider, Will be implicitly GsisTaxisTest",
+			Description: "Not used by this provider, Will be implicitly computed from provider id",
 		},
 		"provider_id": {
 			Type:        schema.TypeString,
-			Optional:    true,
-			Default:     "gsis-taxis-test",
-			Description: "provider id, is always GsisTaxisTest, unless you have a extended custom implementation",
+			Required:    true,
+			Description: "provider id, is one of gsis-taxis-test, gsis-taxis, gsis-govuser-test, gsis-govuser, unless you have a extended custom implementation",
 		},
 		"client_id": {
 			Type:        schema.TypeString,
@@ -62,19 +61,19 @@ func resourceKeycloakOidcGsisTaxisTestIdentityProvider() *schema.Resource {
 		},
 	}
 	oidcResource := resourceKeycloakIdentityProvider()
-	oidcResource.Schema = mergeSchemas(oidcResource.Schema, oidcGsisTaxisTestSchema)
-	oidcResource.CreateContext = resourceKeycloakIdentityProviderCreate(getOidcGsisTaxisTestIdentityProviderFromData, setOidcGsisTaxisTestIdentityProviderData)
-	oidcResource.ReadContext = resourceKeycloakIdentityProviderRead(setOidcGsisTaxisTestIdentityProviderData)
-	oidcResource.UpdateContext = resourceKeycloakIdentityProviderUpdate(getOidcGsisTaxisTestIdentityProviderFromData, setOidcGsisTaxisTestIdentityProviderData)
+	oidcResource.Schema = mergeSchemas(oidcResource.Schema, oidcGsisSchema)
+	oidcResource.CreateContext = resourceKeycloakIdentityProviderCreate(getOidcGsisIdentityProviderFromData, setOidcGsisIdentityProviderData)
+	oidcResource.ReadContext = resourceKeycloakIdentityProviderRead(setOidcGsisIdentityProviderData)
+	oidcResource.UpdateContext = resourceKeycloakIdentityProviderUpdate(getOidcGsisIdentityProviderFromData, setOidcGsisIdentityProviderData)
 	return oidcResource
 }
 
-func getOidcGsisTaxisTestIdentityProviderFromData(data *schema.ResourceData) (*keycloak.IdentityProvider, error) {
+func getOidcGsisIdentityProviderFromData(data *schema.ResourceData) (*keycloak.IdentityProvider, error) {
 	rec, defaultConfig := getIdentityProviderFromData(data)
 	rec.ProviderId = data.Get("provider_id").(string)
-	rec.Alias = "gsis-taxis-test"
+	rec.Alias = "gsis"
 
-	GsisTaxisTestOidcIdentityProviderConfig := &keycloak.IdentityProviderConfig{
+	GsisOidcIdentityProviderConfig := &keycloak.IdentityProviderConfig{
 		ClientId:                    data.Get("client_id").(string),
 		ClientSecret:                data.Get("client_secret").(string),
 		HideOnLoginPage:             types.KeycloakBoolQuoted(data.Get("hide_on_login_page").(bool)),
@@ -84,16 +83,16 @@ func getOidcGsisTaxisTestIdentityProviderFromData(data *schema.ResourceData) (*k
 		DisableUserInfo:             types.KeycloakBoolQuoted(data.Get("disable_user_info").(bool)),
 	}
 
-	if err := mergo.Merge(GsisTaxisTestOidcIdentityProviderConfig, defaultConfig); err != nil {
+	if err := mergo.Merge(GsisOidcIdentityProviderConfig, defaultConfig); err != nil {
 		return nil, err
 	}
 
-	rec.Config = GsisTaxisTestOidcIdentityProviderConfig
+	rec.Config = GsisOidcIdentityProviderConfig
 
 	return rec, nil
 }
 
-func setOidcGsisTaxisTestIdentityProviderData(data *schema.ResourceData, identityProvider *keycloak.IdentityProvider) error {
+func setOidcGsisIdentityProviderData(data *schema.ResourceData, identityProvider *keycloak.IdentityProvider) error {
 	setIdentityProviderData(data, identityProvider)
 	data.Set("provider_id", identityProvider.ProviderId)
 	data.Set("client_id", identityProvider.Config.ClientId)

@@ -67,7 +67,7 @@ func getAttributeImporterIdentityProviderMapperFromData(ctx context.Context, dat
 		}
 
 		rec.Config.Claim = data.Get("claim_name").(string)
-	} else if identityProvider.ProviderId == "gsis-taxis-test" {
+	} else if identityProvider.ProviderId == "gsis-taxis-test" || identityProvider.ProviderId == "gsis-taxis" || identityProvider.ProviderId == "gsis-govuser-test" || identityProvider.ProviderId == "gsis-govuser" {
 		rec.IdentityProviderMapper = "gsis-user-attribute-mapper"
 		rec.Config.JsonField = data.Get("claim_name").(string)
 		rec.Config.UserAttributeName = data.Get("user_attribute").(string)

@@ -13,37 +13,37 @@ import (
 )
 
 /*
-	note: we cannot use parallel tests for this resource as only one instance of a GsisTaxisTest identity provider can be created
+	note: we cannot use parallel tests for this resource as only one instance of a Gsis identity provider can be created
 	for a realm.
 */
 
-func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_basic(t *testing.T) {
+func TestAccKeycloakOidcGsisIdentityProvider_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testAccProviderFactories,
 		PreCheck:          func() { testAccPreCheck(t) },
-		CheckDestroy:      testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy(),
+		CheckDestroy:      testAccCheckKeycloakOidcGsisIdentityProviderDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_basic(),
-				Check:  testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test"),
+				Config: testKeycloakOidcGsisIdentityProvider_basic(),
+				Check:  testAccCheckKeycloakOidcGsisIdentityProviderExists("keycloak_oidc_gsis_identity_provider.gsis"),
 			},
 		},
 	})
 }
 
-func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_extraConfig(t *testing.T) {
+func TestAccKeycloakOidcGsisIdentityProvider_extraConfig(t *testing.T) {
 	customConfigValue := acctest.RandomWithPrefix("tf-acc")
 
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testAccProviderFactories,
 		PreCheck:          func() { testAccPreCheck(t) },
-		CheckDestroy:      testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy(),
+		CheckDestroy:      testAccCheckKeycloakOidcGsisIdentityProviderDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_customConfig("dummyConfig", customConfigValue),
+				Config: testKeycloakOidcGsisIdentityProvider_customConfig("dummyConfig", customConfigValue),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test_custom"),
-					testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderHasCustomConfigValue("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test_custom", customConfigValue),
+					testAccCheckKeycloakOidcGsisIdentityProviderExists("keycloak_oidc_gsis_identity_provider.gsis_custom"),
+					testAccCheckKeycloakOidcGsisIdentityProviderHasCustomConfigValue("keycloak_oidc_gsis_identity_provider.gsis_custom", customConfigValue),
 				),
 			},
 		},
@@ -51,33 +51,33 @@ func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_extraConfig(t *testing.T) 
 }
 
 // ensure that extra_config keys which are covered by top-level attributes are not allowed
-func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_extraConfigInvalid(t *testing.T) {
+func TestAccKeycloakOidcGsisIdentityProvider_extraConfigInvalid(t *testing.T) {
 	customConfigValue := acctest.RandomWithPrefix("tf-acc")
 
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testAccProviderFactories,
 		PreCheck:          func() { testAccPreCheck(t) },
-		CheckDestroy:      testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy(),
+		CheckDestroy:      testAccCheckKeycloakOidcGsisIdentityProviderDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config:      testKeycloakOidcGsisTaxisTestIdentityProvider_customConfig("syncMode", customConfigValue),
+				Config:      testKeycloakOidcGsisIdentityProvider_customConfig("syncMode", customConfigValue),
 				ExpectError: regexp.MustCompile("extra_config key \"syncMode\" is not allowed"),
 			},
 		},
 	})
 }
 
-func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_createAfterManualDestroy(t *testing.T) {
+func TestAccKeycloakOidcGsisIdentityProvider_createAfterManualDestroy(t *testing.T) {
 	var idp = &keycloak.IdentityProvider{}
 
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testAccProviderFactories,
 		PreCheck:          func() { testAccPreCheck(t) },
-		CheckDestroy:      testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy(),
+		CheckDestroy:      testAccCheckKeycloakOidcGsisIdentityProviderDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_basic(),
-				Check:  testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderFetch("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test", idp),
+				Config: testKeycloakOidcGsisIdentityProvider_basic(),
+				Check:  testAccCheckKeycloakOidcGsisIdentityProviderFetch("keycloak_oidc_gsis_identity_provider.gsis", idp),
 			},
 			{
 				PreConfig: func() {
@@ -86,14 +86,14 @@ func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_createAfterManualDestroy(t
 						t.Fatal(err)
 					}
 				},
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_basic(),
-				Check:  testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test"),
+				Config: testKeycloakOidcGsisIdentityProvider_basic(),
+				Check:  testAccCheckKeycloakOidcGsisIdentityProviderExists("keycloak_oidc_gsis_identity_provider.gsis"),
 			},
 		},
 	})
 }
 
-func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_basicUpdateAll(t *testing.T) {
+func TestAccKeycloakOidcGsisIdentityProvider_basicUpdateAll(t *testing.T) {
 	firstEnabled := randomBool()
 
 	firstOidc := &keycloak.IdentityProvider{
@@ -123,23 +123,23 @@ func TestAccKeycloakOidcGsisTaxisTestIdentityProvider_basicUpdateAll(t *testing.
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testAccProviderFactories,
 		PreCheck:          func() { testAccPreCheck(t) },
-		CheckDestroy:      testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy(),
+		CheckDestroy:      testAccCheckKeycloakOidcGsisIdentityProviderDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_basicFromInterface(firstOidc),
-				Check:  testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test"),
+				Config: testKeycloakOidcGsisIdentityProvider_basicFromInterface(firstOidc),
+				Check:  testAccCheckKeycloakOidcGsisIdentityProviderExists("keycloak_oidc_gsis_identity_provider.gsis"),
 			},
 			{
-				Config: testKeycloakOidcGsisTaxisTestIdentityProvider_basicFromInterface(secondOidc),
-				Check:  testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists("keycloak_oidc_gsis_taxis_test_identity_provider.gsis_taxis_test"),
+				Config: testKeycloakOidcGsisIdentityProvider_basicFromInterface(secondOidc),
+				Check:  testAccCheckKeycloakOidcGsisIdentityProviderExists("keycloak_oidc_gsis_identity_provider.gsis"),
 			},
 		},
 	})
 }
 
-func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists(resourceName string) resource.TestCheckFunc {
+func testAccCheckKeycloakOidcGsisIdentityProviderExists(resourceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		_, err := getKeycloakOidcGsisTaxisTestIdentityProviderFromState(s, resourceName)
+		_, err := getKeycloakOidcGsisIdentityProviderFromState(s, resourceName)
 		if err != nil {
 			return err
 		}
@@ -148,9 +148,9 @@ func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderExists(resourceName st
 	}
 }
 
-func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderFetch(resourceName string, idp *keycloak.IdentityProvider) resource.TestCheckFunc {
+func testAccCheckKeycloakOidcGsisIdentityProviderFetch(resourceName string, idp *keycloak.IdentityProvider) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		fetchedOidc, err := getKeycloakOidcGsisTaxisTestIdentityProviderFromState(s, resourceName)
+		fetchedOidc, err := getKeycloakOidcGsisIdentityProviderFromState(s, resourceName)
 		if err != nil {
 			return err
 		}
@@ -162,9 +162,9 @@ func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderFetch(resourceName str
 	}
 }
 
-func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderHasCustomConfigValue(resourceName, customConfigValue string) resource.TestCheckFunc {
+func testAccCheckKeycloakOidcGsisIdentityProviderHasCustomConfigValue(resourceName, customConfigValue string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		fetchedOidc, err := getKeycloakOidcGsisTaxisTestIdentityProviderFromState(s, resourceName)
+		fetchedOidc, err := getKeycloakOidcGsisIdentityProviderFromState(s, resourceName)
 		if err != nil {
 			return err
 		}
@@ -177,10 +177,10 @@ func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderHasCustomConfigValue(r
 	}
 }
 
-func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy() resource.TestCheckFunc {
+func testAccCheckKeycloakOidcGsisIdentityProviderDestroy() resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		for _, rs := range s.RootModule().Resources {
-			if rs.Type != "keycloak_oidc_gsis_taxis_test_identity_provider" {
+			if rs.Type != "keycloak_oidc_gsis_identity_provider" {
 				continue
 			}
 
@@ -197,7 +197,7 @@ func testAccCheckKeycloakOidcGsisTaxisTestIdentityProviderDestroy() resource.Tes
 	}
 }
 
-func getKeycloakOidcGsisTaxisTestIdentityProviderFromState(s *terraform.State, resourceName string) (*keycloak.IdentityProvider, error) {
+func getKeycloakOidcGsisIdentityProviderFromState(s *terraform.State, resourceName string) (*keycloak.IdentityProvider, error) {
 	rs, ok := s.RootModule().Resources[resourceName]
 	if !ok {
 		return nil, fmt.Errorf("resource not found: %s", resourceName)
@@ -214,27 +214,28 @@ func getKeycloakOidcGsisTaxisTestIdentityProviderFromState(s *terraform.State, r
 	return idp, nil
 }
 
-func testKeycloakOidcGsisTaxisTestIdentityProvider_basic() string {
+func testKeycloakOidcGsisIdentityProvider_basic() string {
 	return fmt.Sprintf(`
 data "keycloak_realm" "realm" {
 	realm = "%s"
 }
 
-resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis-taxis-test" {
+resource "keycloak_oidc_gsis_identity_provider" "gsis" {
 	realm             = data.keycloak_realm.realm.id
 	client_id         = "example_id"
 	client_secret     = "example_token"
+	provider_id       = "gsis-taxis-test"
 }
 	`, testAccRealm.Realm)
 }
 
-func testKeycloakOidcGsisTaxisTestIdentityProvider_customConfig(configKey, configValue string) string {
+func testKeycloakOidcGsisIdentityProvider_customConfig(configKey, configValue string) string {
 	return fmt.Sprintf(`
 data "keycloak_realm" "realm" {
 	realm = "%s"
 }
 
-resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis-taxis-test_custom" {
+resource "keycloak_oidc_gsis_identity_provider" "gsis_custom" {
 	realm             = data.keycloak_realm.realm.id
 	provider_id       = "gsis-taxis-test"
 	client_id         = "example_id"
@@ -246,13 +247,13 @@ resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis-taxis-test_cust
 	`, testAccRealm.Realm, configKey, configValue)
 }
 
-func testKeycloakOidcGsisTaxisTestIdentityProvider_basicFromInterface(idp *keycloak.IdentityProvider) string {
+func testKeycloakOidcGsisIdentityProvider_basicFromInterface(idp *keycloak.IdentityProvider) string {
 	return fmt.Sprintf(`
 data "keycloak_realm" "realm" {
 	realm = "%s"
 }
 
-resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis-taxis-test" {
+resource "keycloak_oidc_gsis_identity_provider" "gsis" {
 	realm             						= data.keycloak_realm.realm.id
 	enabled           						= %t
 	accepts_prompt_none_forward_from_client	= %t
@@ -260,6 +261,7 @@ resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis-taxis-test" {
 	client_secret     						= "%s"
 	gui_order                               = %s
 	sync_mode                               = "%s"
+	provider_id                             = "gsis-taxis-test"
 }
 	`, testAccRealm.Realm, idp.Enabled, idp.Config.AcceptsPromptNoneForwFrmClt, idp.Config.ClientId, idp.Config.ClientSecret, idp.Config.GuiOrder, idp.Config.SyncMode)
 }

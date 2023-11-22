@@ -683,8 +683,9 @@ resource "keycloak_oidc_google_identity_provider" "google" {
   gui_order                               = 2
 }
 
-resource "keycloak_oidc_gsis_taxis_test_identity_provider" "gsis_taxis_test" {
+resource "keycloak_oidc_gsis_identity_provider" "gsis_taxis_test" {
   realm                                   = keycloak_realm.test.id
+  provider_id 							  = "gsis-taxis-test"
   client_id                               = "myclientid.gsis.taxis.test"
   client_secret                           = "myclientsecret"
   default_scopes                          = "openid random profile"

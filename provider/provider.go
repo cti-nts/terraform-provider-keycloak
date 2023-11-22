@@ -92,7 +92,7 @@ func KeycloakProvider(client *keycloak.KeycloakClient) *schema.Provider {
 			"keycloak_custom_identity_provider_mapper":                   resourceKeycloakCustomIdentityProviderMapper(),
 			"keycloak_saml_identity_provider":                            resourceKeycloakSamlIdentityProvider(),
 			"keycloak_oidc_google_identity_provider":                     resourceKeycloakOidcGoogleIdentityProvider(),
-			"keycloak_oidc_gsis_taxis_test_identity_provider":            resourceKeycloakOidcGsisTaxisTestIdentityProvider(),
+			"keycloak_oidc_gsis_identity_provider":                       resourceKeycloakOidcGsisIdentityProvider(),
 			"keycloak_oidc_identity_provider":                            resourceKeycloakOidcIdentityProvider(),
 			"keycloak_openid_client_authorization_resource":              resourceKeycloakOpenidClientAuthorizationResource(),
 			"keycloak_openid_client_group_policy":                        resourceKeycloakOpenidClientAuthorizationGroupPolicy(),
