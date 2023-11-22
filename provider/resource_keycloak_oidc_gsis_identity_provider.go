@@ -71,7 +71,7 @@ func resourceKeycloakOidcGsisIdentityProvider() *schema.Resource {
 func getOidcGsisIdentityProviderFromData(data *schema.ResourceData) (*keycloak.IdentityProvider, error) {
 	rec, defaultConfig := getIdentityProviderFromData(data)
 	rec.ProviderId = data.Get("provider_id").(string)
-	rec.Alias = "gsis"
+	rec.Alias = data.Get("provider_id").(string)
 
 	GsisOidcIdentityProviderConfig := &keycloak.IdentityProviderConfig{
 		ClientId:                    data.Get("client_id").(string),
